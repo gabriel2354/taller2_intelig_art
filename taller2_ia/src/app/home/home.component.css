@@ -1,0 +1,36 @@
+section {
+    padding: 50px 0;
+}
+
+h1, h2 {
+    background: linear-gradient(to right, #5F9BE8 0%, #B968E8 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Mensajes del usuario */
+.user-message {
+    background-color: #2563eb;
+    color: white;
+    border-radius: 18px 18px 0 18px;
+    padding: 8px 14px;
+    max-width: 75%;
+    word-wrap: break-word;
+}
+
+/* Mensajes del bot */
+.bot-message {
+    background-color: #374151;
+    color: white;
+    border-radius: 18px 18px 18px 0;
+    padding: 8px 14px;
+    max-width: 75%;
+    word-wrap: break-word;
+}
+
+/* Medios del usuario (imagen/audio) */
+.user-media {
+    border-radius: 12px;
+    max-width: 220px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}

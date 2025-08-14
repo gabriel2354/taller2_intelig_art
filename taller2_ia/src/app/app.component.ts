@@ -5,8 +5,10 @@ import { RouterModule } from '@angular/router';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterModule,CommonModule],
+  imports: [RouterModule, CommonModule],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent {}  // 👈 ¡Este export es lo que faltaba!
+export class AppComponent {
+  title = 'flowbiteBlocks'; 
+}
