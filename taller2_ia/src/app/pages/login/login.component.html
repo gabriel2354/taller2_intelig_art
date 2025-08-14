@@ -1,0 +1,50 @@
+<div class="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900 bg-cover bg-center"
+     style="background-image: url('/assets/imgs/champ-select2.jpg');">
+  <div class="w-full max-w-md bg-white rounded-lg shadow-md dark:bg-gray-800 p-6 bg-opacity-90">
+    
+    <!-- Título -->
+    <h2 class="text-2xl font-bold text-center mb-6 text-gray-900 dark:text-white">
+      🔑 Iniciar Sesión
+    </h2>
+
+    <!-- Formulario -->
+    <form (ngSubmit)="onSubmit()" #loginForm="ngForm" class="space-y-4">
+      
+      <!-- Correo -->
+      <div>
+        <label class="block mb-1 text-gray-700 dark:text-gray-300">Correo electrónico</label>
+        <input type="email" name="email" [(ngModel)]="email" required placeholder="tuemail@ejemplo.com"
+          class="w-full p-2 rounded-lg border border-gray-300 dark:border-gray-600 
+                 dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500">
+      </div>
+
+      <!-- Contraseña -->
+      <div>
+        <label class="block mb-1 text-gray-700 dark:text-gray-300">Contraseña</label>
+        <input type="password" name="password" [(ngModel)]="password" required placeholder="••••••••"
+          class="w-full p-2 rounded-lg border border-gray-300 dark:border-gray-600 
+                 dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500">
+      </div>
+
+      <!-- Recordarme -->
+      <div class="flex items-center justify-between">
+        <label class="flex items-center text-sm text-gray-600 dark:text-gray-400">
+          <input type="checkbox" class="mr-2"> Recuérdame
+        </label>
+        <a href="#" class="text-sm text-primary-600 hover:underline">¿Olvidaste tu contraseña?</a>
+      </div>
+
+      <!-- Botón -->
+      <button type="submit"
+        class="w-full bg-primary-700 hover:bg-primary-800 text-white px-4 py-2 rounded-lg">
+        Iniciar Sesión
+      </button>
+
+      <!-- Registro -->
+      <p class="text-sm text-center text-gray-600 dark:text-gray-400">
+        ¿No tienes cuenta?
+        <a href="#" class="text-primary-600 hover:underline">Regístrate</a>
+      </p>
+    </form>
+  </div>
+</div>

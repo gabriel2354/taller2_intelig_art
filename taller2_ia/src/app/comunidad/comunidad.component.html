@@ -1,0 +1,62 @@
+<header>
+  <nav class="bg-white border-gray-200 px-4 lg:px-6 py-2.5 dark:bg-gray-800" style="position: fixed; width: 100%; z-index: 50;">
+    <div class="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl">
+      <a href="/" class="flex items-center">
+        <img src="/assets/imgs/logo.png" class="mr-3 h-6 sm:h-9" alt="Logo" />
+        <span class="self-center text-xl font-semibold whitespace-nowrap dark:text-white">GameOver Club</span>
+      </a>
+      <div class="flex items-center lg:order-2">
+        <a href="/login" class="text-gray-800 dark:text-white hover:bg-gray-50 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 dark:hover:bg-gray-700 focus:outline-none dark:focus:ring-gray-800">Iniciar sesión</a>
+        <a href="#" class="text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800">Comenzar ahora</a>
+        <button data-collapse-toggle="mobile-menu-2" type="button" class="inline-flex items-center p-2 ml-1 text-sm text-gray-500 rounded-lg lg:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600">
+          <span class="sr-only">Abrir menú principal</span>
+          <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M3 5h14M3 10h14M3 15h14" clip-rule="evenodd"/></svg>
+        </button>
+      </div>
+      <div class="hidden justify-between items-center w-full lg:flex lg:w-auto lg:order-1" id="mobile-menu-2">
+        <ul class="flex flex-col mt-4 font-medium lg:flex-row lg:space-x-8 lg:mt-0">
+          <li><a href="/catalogo" class="block py-2 pr-4 pl-3 text-gray-700 hover:text-primary-700">Catálogo</a></li>
+          <li><a href="/comunidad" class="block py-2 pr-4 pl-3 text-gray-700 hover:text-primary-700">Comunidad</a></li>
+          <li><a href="/contacto" class="block py-2 pr-4 pl-3 text-gray-700 hover:text-primary-700">Contacto</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<!-- CONTENIDO PRINCIPAL -->
+<section class="bg-gray-100 dark:bg-gray-900 py-20">
+  <div class="max-w-6xl mx-auto px-4 text-center">
+    <h1 class="text-4xl font-bold text-primary-600 mb-6">🎮 Comunidad Gamer</h1>
+    <p class="text-lg text-gray-700 dark:text-gray-300 max-w-3xl mx-auto mb-8">
+      Únete a nuestra comunidad y comparte tus experiencias, trucos y recomendaciones de juegos con miles de jugadores en todo el mundo.
+    </p>
+
+    <!-- Tarjetas de comunidad -->
+    <div class="grid gap-8 md:grid-cols-3">
+      <!-- Card 1 -->
+      <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
+        <img src="/assets/imgs/debate.jpeg" alt="Foros de debate" class="w-full h-40 object-cover rounded-lg mb-4">
+        <h2 class="text-xl font-bold mb-4 text-primary-600">Foros de Debate</h2>
+        <p class="text-gray-600 dark:text-gray-300">Participa en discusiones sobre los últimos lanzamientos, teorías de juegos y eventos en línea.</p>
+      </div>
+      <!-- Card 2 -->
+      <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
+        <img src="/assets/imgs/vivo.jpg" alt="Eventos en vivo" class="w-full h-40 object-cover rounded-lg mb-4">
+        <h2 class="text-xl font-bold mb-4 text-primary-600">Eventos en Vivo</h2>
+        <p class="text-gray-600 dark:text-gray-300">Organizamos torneos y transmisiones en vivo donde podrás competir y ganar premios.</p>
+      </div>
+      <!-- Card 3 -->
+      <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
+        <img src="/assets/imgs/clanes.jpg" alt="Clanes y equipos" class="w-full h-40 object-cover rounded-lg mb-4">
+        <h2 class="text-xl font-bold mb-4 text-primary-600">Clanes y Equipos</h2>
+        <p class="text-gray-600 dark:text-gray-300">Encuentra jugadores con tus mismos intereses y forma equipos para dominar juntos.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="bg-gray-900 text-white py-6 text-center mt-10">
+  <p>&copy; 2025 GameOver Club - Comunidad Gamer</p>
+</footer>

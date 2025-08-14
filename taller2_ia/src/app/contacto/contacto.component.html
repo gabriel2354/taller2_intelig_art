@@ -1,0 +1,108 @@
+<header>
+  <nav class="bg-white border-gray-200 px-4 lg:px-6 py-2.5 dark:bg-gray-800" style="position: fixed; width: 100%; z-index: 50;">
+      <div class="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl">
+          <a href="#" class="flex items-center">
+              <img src="/assets/imgs/logo.png" class="mr-3 h-6 sm:h-9" alt="Logo" />
+              <span class="self-center text-xl font-semibold whitespace-nowrap dark:text-white">GameOver Club</span>
+          </a>
+          <div class="flex items-center lg:order-2">
+              <a href="/login" class="text-gray-800 dark:text-white hover:bg-gray-50 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 dark:hover:bg-gray-700 focus:outline-none dark:focus:ring-gray-800">Iniciar sesión</a>
+              <a href="#" class="text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800">Comenzar ahora</a>
+              <button data-collapse-toggle="mobile-menu-2" type="button" class="inline-flex items-center p-2 ml-1 text-sm text-gray-500 rounded-lg lg:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600">
+                  <span class="sr-only">Abrir menú principal</span>
+                  <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M3 5h14M3 10h14M3 15h14" clip-rule="evenodd"/></svg>
+              </button>
+          </div>
+          <div class="hidden justify-between items-center w-full lg:flex lg:w-auto lg:order-1" id="mobile-menu-2">
+              <ul class="flex flex-col mt-4 font-medium lg:flex-row lg:space-x-8 lg:mt-0">
+                  <li><a href="#" class="block py-2 pr-4 pl-3 text-white rounded bg-primary-700 lg:bg-transparent lg:text-primary-700 lg:p-0 dark:text-white"></a></li>
+                  <li><a href="/catalogo" class="block py-2 pr-4 pl-3 text-gray-700 hover:text-primary-700">Catálogo</a></li>
+                  
+                  <li><a href="#" class="block py-2 pr-4 pl-3 text-gray-700 hover:text-primary-700">Comunidad</a></li>
+                  <li><a href="/contacto" class="block py-2 pr-4 pl-3 text-gray-700 hover:text-primary-700">Contacto</a></li>
+              </ul>
+          </div>
+      </div>
+  </nav>
+</header>
+
+
+<section class="bg-white dark:bg-gray-900 pt-28">
+  <div class="max-w-screen-xl mx-auto px-4 py-8">
+    <h1 class="text-4xl font-extrabold text-gray-900 dark:text-white mb-6">📞 Contáctanos</h1>
+    <p class="text-gray-600 dark:text-gray-300 mb-10">
+      Si tienes preguntas, sugerencias o deseas más información, rellena el formulario o utiliza los medios de contacto que te ofrecemos.
+    </p>
+
+    <div class="grid md:grid-cols-2 gap-10">
+      <!-- Formulario -->
+      <form (ngSubmit)="enviarFormulario()" class="space-y-4 bg-gray-100 dark:bg-gray-800 p-6 rounded-lg shadow-lg">
+        <div>
+          <label class="block text-gray-700 dark:text-gray-300">Nombre</label>
+          <input [(ngModel)]="nombre" name="nombre" type="text" class="w-full p-2 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary-500 dark:bg-gray-700 dark:text-white" required>
+        </div>
+
+        <div>
+          <label class="block text-gray-700 dark:text-gray-300">Correo electrónico</label>
+          <input [(ngModel)]="email" name="email" type="email" class="w-full p-2 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary-500 dark:bg-gray-700 dark:text-white" required>
+        </div>
+
+        <div>
+          <label class="block text-gray-700 dark:text-gray-300">Mensaje</label>
+          <textarea [(ngModel)]="mensaje" name="mensaje" rows="4" class="w-full p-2 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary-500 dark:bg-gray-700 dark:text-white" required></textarea>
+        </div>
+
+        <button type="submit" class="bg-primary-700 hover:bg-primary-800 text-white px-6 py-2 rounded-lg">
+          Enviar
+        </button>
+      </form>
+
+      <!-- Información de contacto -->
+      <div class="bg-gray-100 dark:bg-gray-800 p-6 rounded-lg shadow-lg">
+        <h2 class="text-2xl font-bold mb-4 dark:text-white">📍 Información</h2>
+        <p class="mb-4 text-gray-700 dark:text-gray-300">Puedes encontrarnos o comunicarte a través de estos medios:</p>
+        <ul class="space-y-3 text-gray-700 dark:text-gray-300">
+          <li>📍 Dirección: Av. Siempre Viva 742, Springfield</li>
+          <li>📞 Teléfono: +593 987 654 321</li>
+          <li>✉️ Email: <a href="mailto:contacto&#64;gameoverclub.com" class="text-blue-500 hover:underline">contacto&#64;gameoverclub.com</a></li>
+          <li>🌐 Sitio web: <a href="https://www.gameoverclub.com" target="_blank" class="text-blue-500 hover:underline">www.gameoverclub.com</a></li>
+        </ul>
+        <div class="mt-6">
+          <h3 class="text-lg font-semibold dark:text-white">Síguenos</h3>
+          <div class="flex space-x-4 mt-2">
+            <a href="#" class="text-blue-500 hover:text-blue-700">Facebook</a>
+            <a href="#" class="text-pink-500 hover:text-pink-700">Instagram</a>
+            <a href="#" class="text-sky-500 hover:text-sky-700">Twitter</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="bg-gray-900 text-gray-300 py-8 mt-12">
+  <div class="max-w-screen-xl mx-auto px-4 grid md:grid-cols-3 gap-8">
+    <div>
+      <h2 class="text-xl font-bold text-white mb-4">GameOver Club</h2>
+      <p>Tu tienda en línea de videojuegos, consolas y accesorios favoritos.</p>
+    </div>
+    <div>
+      <h3 class="font-semibold text-white mb-3">Enlaces útiles</h3>
+      <ul class="space-y-2">
+        <li><a routerLink="/" class="hover:text-white">Inicio</a></li>
+        <li><a routerLink="/catalogo" class="hover:text-white">Catálogo</a></li>
+        <li><a routerLink="/contacto" class="hover:text-white">Contacto</a></li>
+      </ul>
+    </div>
+    <div>
+      <h3 class="font-semibold text-white mb-3">Contacto</h3>
+      <p>📍 Av. Siempre Viva 742, Springfield</p>
+      <p>📞 +593 987 654 321</p>
+      <p>✉️ contacto&#64;gameoverclub.com</p>
+    </div>
+  </div>
+  <div class="mt-6 text-center text-sm text-gray-500">
+    © 2025 GameOver Club. Todos los derechos reservados.
+  </div>
+</footer>
