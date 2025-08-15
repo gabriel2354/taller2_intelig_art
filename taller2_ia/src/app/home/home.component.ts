@@ -1,17 +1,20 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { initFlowbite } from 'flowbite';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, RouterOutlet],
+  imports: [CommonModule, RouterOutlet, HttpClientModule],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
   title = 'flowbiteBlocks';
+
+  constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
     initFlowbite();
@@ -42,28 +45,27 @@ export class HomeComponent implements OnInit {
       }
     });
 
-// Subir imágenes múltiples
-imageUpload?.addEventListener('change', () => {
-  if (imageUpload.files && imageUpload.files.length > 0) {
-    Array.from(imageUpload.files).forEach((file) => {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        chatMessages!.innerHTML += `
-          <div class="flex justify-end">
-            <img src="${e.target?.result}" alt="Imagen enviada" 
-                 class="max-w-[200px] rounded-lg shadow mb-2" />
-          </div>
-        `;
-        chatMessages!.scrollTop = chatMessages!.scrollHeight;
-      };
-      reader.readAsDataURL(file);
+    // Subir imágenes múltiples
+    imageUpload?.addEventListener('change', () => {
+      if (imageUpload.files && imageUpload.files.length > 0) {
+        Array.from(imageUpload.files).forEach((file) => {
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            chatMessages!.innerHTML += `
+              <div class="flex justify-end">
+                <img src="${e.target?.result}" alt="Imagen enviada" 
+                    class="max-w-[200px] rounded-lg shadow mb-2" />
+              </div>
+            `;
+            chatMessages!.scrollTop = chatMessages!.scrollHeight;
+          };
+          reader.readAsDataURL(file);
+        });
+
+        // Permitir volver a seleccionar las mismas imágenes
+        imageUpload.value = '';
+      }
     });
-
-    // Permitir volver a seleccionar las mismas imágenes
-    imageUpload.value = '';
-  }
-});
-
 
     // Grabar audio
     let mediaRecorder: MediaRecorder;
@@ -94,10 +96,11 @@ imageUpload?.addEventListener('change', () => {
     });
   }
 
-  // Agregar texto del usuario
+  // Enviar mensaje de texto y llamar al backend
   sendMessage(chatInput: HTMLInputElement, chatMessages: HTMLElement | null): void {
     const message = chatInput.value.trim();
     if (message && chatMessages) {
+      // Mostrar mensaje del usuario
       chatMessages.innerHTML += `
         <div class="flex justify-end">
           <span class="bg-blue-500 text-white px-3 py-2 rounded-lg mb-2 max-w-[75%] break-words">
@@ -106,23 +109,53 @@ imageUpload?.addEventListener('change', () => {
         </div>
       `;
       chatInput.value = '';
-
-      setTimeout(() => {
-        chatMessages.innerHTML += `
-          <div class="flex justify-start">
-            <span class="bg-gray-200 text-gray-900 px-3 py-2 rounded-lg mb-2">
-              Estoy procesando tu mensaje...
-            </span>
-          </div>
-        `;
-        chatMessages.scrollTop = chatMessages.scrollHeight;
-      }, 500);
-
       chatMessages.scrollTop = chatMessages.scrollHeight;
+
+      // Mensaje de "procesando..."
+      const loadingId = `loading-${Date.now()}`;
+      chatMessages.innerHTML += `
+        <div id="${loadingId}" class="flex justify-start">
+          <span class="bg-gray-200 text-gray-900 px-3 py-2 rounded-lg mb-2">
+            Estoy procesando tu mensaje...
+          </span>
+        </div>
+      `;
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+
+      // Llamada al backend para obtener respuesta de ChatGPT
+      this.http.post<{ reply: string }>('http://localhost:3000/chat', { message })
+        .subscribe({
+          next: (res) => {
+            const loadingMsg = document.getElementById(loadingId);
+            if (loadingMsg) loadingMsg.remove();
+
+            chatMessages.innerHTML += `
+              <div class="flex justify-start">
+                <span class="bg-gray-200 text-gray-900 px-3 py-2 rounded-lg mb-2">
+                  ${res.reply}
+                </span>
+              </div>
+            `;
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+          },
+          error: () => {
+            const loadingMsg = document.getElementById(loadingId);
+            if (loadingMsg) loadingMsg.remove();
+
+            chatMessages.innerHTML += `
+              <div class="flex justify-start">
+                <span class="bg-red-500 text-white px-3 py-2 rounded-lg mb-2">
+                  ❌ Error al conectar con el servidor.
+                </span>
+              </div>
+            `;
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+          }
+        });
     }
   }
 
-  // 📌 Función para agregar imagen y/o audio del usuario alineado a la derecha
+  // 📌 Agregar imagen y/o audio del usuario
   addUserMedia(chatMessages: HTMLElement | null, media: { imageUrl?: string, audioUrl?: string }): void {
     if (!chatMessages) return;
 

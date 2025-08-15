@@ -123,6 +123,12 @@
   </div>
 </footer>
 
+<!-- BOTÓN PARA ABRIR EL CHATBOT -->
+<button data-modal-target="chatbotModal" data-modal-toggle="chatbotModal"
+    class="fixed bottom-5 right-5 bg-primary-700 text-white p-3 rounded-full shadow-lg hover:bg-primary-800">
+    💬
+</button>
+
 <!-- MODAL DEL CHATBOT -->
 <div id="chatbotModal" tabindex="-1" aria-hidden="true"
     class="hidden fixed top-0 left-0 right-0 z-50 w-full p-4 overflow-x-hidden overflow-y-auto h-[100vh] bg-black/50">
@@ -140,36 +146,7 @@
 
             <!-- Chat messages -->
             <div id="chatMessages" class="flex-1 p-4 overflow-y-auto space-y-3 bg-gray-50 dark:bg-gray-900">
-                <!-- Ejemplo mensaje bot -->
-                <!--
-                <div class="flex items-start gap-2">
-                    <div class="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center">🤖</div>
-                    <div class="bot-message">Hola, ¿en qué puedo ayudarte?</div>
-                </div>
-                -->
-
-                <!-- Ejemplo mensaje usuario -->
-                <!--
-                <div class="flex justify-end">
-                    <div class="user-message">¡Hola! Aquí está mi imagen.</div>
-                </div>
-                -->
-
-                <!-- Ejemplo imagen usuario -->
-                <!--
-                <div class="flex justify-end">
-                    <img src="ruta-de-imagen.jpg" alt="Imagen" class="user-media">
-                </div>
-                -->
-
-                <!-- Ejemplo audio usuario -->
-                <!--
-                <div class="flex justify-end">
-                    <audio controls class="user-media">
-                        <source src="audio.mp3" type="audio/mpeg">
-                    </audio>
-                </div>
-                -->
+                <!-- Aquí se insertan los mensajes dinámicamente -->
             </div>
 
             <!-- Footer -->
