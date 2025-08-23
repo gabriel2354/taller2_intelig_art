@@ -2,186 +2,156 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
 import { initFlowbite } from 'flowbite';
+
+interface ChatMessage {
+  sender: 'user' | 'bot';
+  text?: string;
+  imageUrl?: string;
+  audioUrl?: string;
+  loading?: boolean;
+}
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, HttpClientModule],
+  imports: [CommonModule, RouterOutlet, HttpClientModule, FormsModule],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
   title = 'flowbiteBlocks';
+  private apiUrl = 'http://localhost:3000';
+
+  messages: ChatMessage[] = [];
+  userMessage: string = '';
+  recording = false;
+  private mediaRecorder?: MediaRecorder;
+  private audioChunks: BlobPart[] = [];
 
   constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
     initFlowbite();
-
-    if (!document.documentElement.classList.contains('dark')) {
-      document.documentElement.classList.add('dark');
-    }
-
-    this.initChatbot();
+    document.documentElement.classList.add('dark');
   }
 
-  initChatbot(): void {
-    const chatInput = document.getElementById('chatInput') as HTMLInputElement;
-    const sendButton = document.getElementById('sendMessage');
-    const chatMessages = document.getElementById('chatMessages');
-    const imageUpload = document.getElementById('imageUpload') as HTMLInputElement;
-    const recordAudio = document.getElementById('recordAudio');
+  // 📌 Enviar mensaje
+  sendMessage(): void {
+    const message = this.userMessage.trim();
+    if (!message) return;
 
-    // Enviar mensaje con botón
-    sendButton?.addEventListener('click', () => {
-      this.sendMessage(chatInput, chatMessages);
-    });
+    this.messages.push({ sender: 'user', text: message });
+    this.messages.push({ sender: 'bot', text: 'Estoy procesando...', loading: true });
 
-    // Enviar mensaje con Enter
-    chatInput?.addEventListener('keypress', (event) => {
-      if (event.key === 'Enter') {
-        this.sendMessage(chatInput, chatMessages);
-      }
-    });
-
-    // Subir imágenes múltiples
-    imageUpload?.addEventListener('change', () => {
-      if (imageUpload.files && imageUpload.files.length > 0) {
-        Array.from(imageUpload.files).forEach((file) => {
-          const reader = new FileReader();
-          reader.onload = (e) => {
-            chatMessages!.innerHTML += `
-              <div class="flex justify-end">
-                <img src="${e.target?.result}" alt="Imagen enviada" 
-                    class="max-w-[200px] rounded-lg shadow mb-2" />
-              </div>
-            `;
-            chatMessages!.scrollTop = chatMessages!.scrollHeight;
-          };
-          reader.readAsDataURL(file);
-        });
-
-        // Permitir volver a seleccionar las mismas imágenes
-        imageUpload.value = '';
-      }
-    });
-
-    // Grabar audio
-    let mediaRecorder: MediaRecorder;
-    let audioChunks: BlobPart[] = [];
-
-    recordAudio?.addEventListener('click', async () => {
-      if (!mediaRecorder || mediaRecorder.state === 'inactive') {
-        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        mediaRecorder = new MediaRecorder(stream);
-        audioChunks = [];
-
-        mediaRecorder.ondataavailable = (event) => {
-          audioChunks.push(event.data);
-        };
-
-        mediaRecorder.onstop = () => {
-          const audioBlob = new Blob(audioChunks, { type: 'audio/mp3' });
-          const audioUrl = URL.createObjectURL(audioBlob);
-          this.addUserMedia(chatMessages, { audioUrl });
-        };
-
-        mediaRecorder.start();
-        recordAudio.textContent = "⏹";
-      } else {
-        mediaRecorder.stop();
-        recordAudio.textContent = "🎤";
-      }
-    });
-  }
-
-  // Enviar mensaje de texto y llamar al backend
-  sendMessage(chatInput: HTMLInputElement, chatMessages: HTMLElement | null): void {
-    const message = chatInput.value.trim();
-    if (message && chatMessages) {
-      // Mostrar mensaje del usuario
-      chatMessages.innerHTML += `
-        <div class="flex justify-end">
-          <span class="bg-blue-500 text-white px-3 py-2 rounded-lg mb-2 max-w-[75%] break-words">
-            ${message}
-          </span>
-        </div>
-      `;
-      chatInput.value = '';
-      chatMessages.scrollTop = chatMessages.scrollHeight;
-
-      // Mensaje de "procesando..."
-      const loadingId = `loading-${Date.now()}`;
-      chatMessages.innerHTML += `
-        <div id="${loadingId}" class="flex justify-start">
-          <span class="bg-gray-200 text-gray-900 px-3 py-2 rounded-lg mb-2">
-            Estoy procesando tu mensaje...
-          </span>
-        </div>
-      `;
-      chatMessages.scrollTop = chatMessages.scrollHeight;
-
-      // Llamada al backend para obtener respuesta de ChatGPT
-      this.http.post<{ reply: string }>('http://localhost:3000/chat', { message })
+    if (message.startsWith('/imagen')) {
+      const prompt = message.replace('/imagen', '').trim();
+      this.http.post<{ url?: string; error?: string }>(`${this.apiUrl}/generar-imagen`, { prompt })
         .subscribe({
           next: (res) => {
-            const loadingMsg = document.getElementById(loadingId);
-            if (loadingMsg) loadingMsg.remove();
-
-            chatMessages.innerHTML += `
-              <div class="flex justify-start">
-                <span class="bg-gray-200 text-gray-900 px-3 py-2 rounded-lg mb-2">
-                  ${res.reply}
-                </span>
-              </div>
-            `;
-            chatMessages.scrollTop = chatMessages.scrollHeight;
+            this.removeLoading();
+            if (res.error) {
+              this.messages.push({ sender: 'bot', text: `⚠️ ${res.error}` });
+            } else if (res.url) {
+              this.messages.push({ sender: 'bot', imageUrl: res.url });
+            } else {
+              this.messages.push({ sender: 'bot', text: '⚠️ No se pudo generar la imagen.' });
+            }
           },
           error: () => {
-            const loadingMsg = document.getElementById(loadingId);
-            if (loadingMsg) loadingMsg.remove();
-
-            chatMessages.innerHTML += `
-              <div class="flex justify-start">
-                <span class="bg-red-500 text-white px-3 py-2 rounded-lg mb-2">
-                  ❌ Error al conectar con el servidor.
-                </span>
-              </div>
-            `;
-            chatMessages.scrollTop = chatMessages.scrollHeight;
+            this.removeLoading();
+            this.messages.push({ sender: 'bot', text: '❌ Error al generar imagen.' });
+          }
+        });
+    } else {
+      this.http.post<{ reply?: string; error?: string }>(`${this.apiUrl}/chat`, { message })
+        .subscribe({
+          next: (res) => {
+            this.removeLoading();
+            this.messages.push({ sender: 'bot', text: res.error || res.reply || 'Sin respuesta.' });
+          },
+          error: () => {
+            this.removeLoading();
+            this.messages.push({ sender: 'bot', text: '❌ Error al conectar con el servidor.' });
           }
         });
     }
+
+    this.userMessage = '';
   }
 
-  // 📌 Agregar imagen y/o audio del usuario
-  addUserMedia(chatMessages: HTMLElement | null, media: { imageUrl?: string, audioUrl?: string }): void {
-    if (!chatMessages) return;
+  // 📌 Subir imagen
+  sendImage(file: File): void {
+    this.messages.push({ sender: 'user', imageUrl: URL.createObjectURL(file) });
+    this.messages.push({ sender: 'bot', text: 'Estoy procesando...', loading: true });
 
-    let content = '';
+    const formData = new FormData();
+    formData.append('image', file);
 
-    if (media.audioUrl) {
-      content += `
-        <audio controls class="rounded-lg shadow max-w-[220px]">
-          <source src="${media.audioUrl}" type="audio/mpeg">
-        </audio>
-      `;
+    this.http.post<{ descripcion?: string; error?: string }>(`${this.apiUrl}/analizar-imagen`, formData)
+      .subscribe({
+        next: (res) => {
+          this.removeLoading();
+          this.messages.push({ sender: 'bot', text: res.error || res.descripcion || '⚠️ No se pudo analizar la imagen.' });
+        },
+        error: () => {
+          this.removeLoading();
+          this.messages.push({ sender: 'bot', text: '❌ Error al analizar imagen.' });
+        }
+      });
+  }
+
+  // 📌 Manejar input file (corregido)
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      this.sendImage(input.files[0]);
     }
+  }
 
-    if (media.imageUrl) {
-      content += `
-        <img src="${media.imageUrl}" alt="Imagen enviada"
-          class="rounded-lg shadow max-w-[200px]" />
-      `;
+  // 📌 Subir audio
+  toggleRecording(): void {
+    if (!this.recording) {
+      navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
+        this.mediaRecorder = new MediaRecorder(stream);
+        this.audioChunks = [];
+
+        this.mediaRecorder.ondataavailable = event => this.audioChunks.push(event.data);
+
+        this.mediaRecorder.onstop = () => {
+          const audioBlob = new Blob(this.audioChunks, { type: 'audio/mpeg' });
+          this.messages.push({ sender: 'user', audioUrl: URL.createObjectURL(audioBlob) });
+          this.messages.push({ sender: 'bot', text: 'Estoy procesando...', loading: true });
+
+          const formData = new FormData();
+          formData.append('audio', audioBlob, 'grabacion.mp3');
+
+          this.http.post<{ texto?: string; error?: string }>(`${this.apiUrl}/voz-a-texto`, formData)
+            .subscribe({
+              next: (res) => {
+                this.removeLoading();
+                this.messages.push({ sender: 'bot', text: res.error || `🗣 ${res.texto}` || '⚠️ No se pudo transcribir el audio.' });
+              },
+              error: () => {
+                this.removeLoading();
+                this.messages.push({ sender: 'bot', text: '❌ Error al procesar audio.' });
+              }
+            });
+        };
+
+        this.mediaRecorder.start();
+        this.recording = true;
+      }).catch(err => console.error("❌ Error al acceder al micrófono:", err));
+    } else {
+      this.mediaRecorder?.stop();
+      this.recording = false;
     }
+  }
 
-    chatMessages.innerHTML += `
-      <div class="flex justify-end items-end gap-2 mb-2">
-        ${content}
-      </div>
-    `;
-
-    chatMessages.scrollTop = chatMessages.scrollHeight;
+  // 📌 Quitar loading
+  private removeLoading(): void {
+    const idx = this.messages.findIndex(m => m.loading);
+    if (idx !== -1) this.messages.splice(idx, 1);
   }
 }
